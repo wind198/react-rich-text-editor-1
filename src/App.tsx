@@ -1,25 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { IPortableBlock } from "./core/types";
+import { renderPortableArr } from "./core/helpers";
 
 function App() {
+  const [textAreaContent, setTextAreaContent] = useState("");
+
+  const [errorParsing, setErrorParsing] = useState(false);
+
+  const portableArr = useMemo(() => {
+    try {
+      const arr = JSON.parse(textAreaContent);
+      setErrorParsing(false);
+      return renderPortableArr(arr);
+    } catch (error) {
+      setErrorParsing(true);
+      console.log(error);
+
+      return [];
+    }
+  }, [textAreaContent]);
+
+  useEffect(() => {
+    if (!portableArr.length) {
+      return;
+    }
+    console.log(portableArr);
+
+    const dom = document.querySelector(".render-result");
+    if (!dom) return;
+    dom.innerHTML = "";
+    portableArr.forEach((n) => {
+      n && dom?.append(n);
+    });
+  }, [portableArr]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <main
+        className="main"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          placeItems: "stretch",
+          width: "100%",
+          minHeight: 400,
+        }}
+      >
+        <textarea
+          value={textAreaContent}
+          onChange={(e) => {
+            setTextAreaContent(e.target.value);
+          }}
+        ></textarea>
+        <div
+          className="render-result"
+          // dangerouslySetInnerHTML={{ __html: portableArr.toString() }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          {/* {portableArr as any} */}
+        </div>
+      </main>
+      <p>{errorParsing && "Error"}</p>
+    </>
   );
 }
 

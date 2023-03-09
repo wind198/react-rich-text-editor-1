@@ -1,0 +1,25 @@
+[
+  {
+    "_key": "1",
+    "_type": "block",
+    "_style": "paragraph",
+    "_marks": [2],
+    "_children": [
+      {
+        "_type": "inline",
+        "_key": "2",
+        "_text": "This is a ",
+        "_style": "span"
+      },
+      {
+        "_type": "inline",
+        "_key": "3",
+        "_style": "link",
+        "_attrs": {
+          "href": "https://google.com"
+        },
+        "_text": "link"
+      }
+    ]
+  }
+]
